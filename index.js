@@ -80,5 +80,5 @@ window.start = function start() {
   }, duration * 0.75);
   setTimeout(() => {
     el.remove();
-  }, duration + 200);
+  }, duration * 4 + 200);
 };
