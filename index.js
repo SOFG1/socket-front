@@ -1,4 +1,4 @@
-const socket = io("192.168.100.84:8000");
+const socket = io("https://socket-psli.onrender.com/");
 window.socket = socket;
 
 window.settings = {
