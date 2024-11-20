@@ -77,7 +77,37 @@ window.start = function start() {
     if (!document.querySelector(".started")) return;
     const audio = new Audio("1.wav");
     audio.play();
+  }, duration + duration / 4);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
+  }, duration * 2 + duration / 4);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
+  }, duration * 3 + duration / 4);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
   }, duration * 0.75);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
+  }, duration * 2 + duration * 0.75);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
+  }, duration * 3 + duration * 0.75);
+  setTimeout(() => {
+    if (!document.querySelector(".started")) return;
+    const audio = new Audio("1.wav");
+    audio.play();
+  }, duration * 4 + duration * 0.75);
   setTimeout(() => {
     el.remove();
   }, duration * 4 + 200);
