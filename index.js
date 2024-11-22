@@ -1,6 +1,7 @@
 const socket = io("https://socket-psli.onrender.com/");
 window.socket = socket;
 
+let session = false;
 let interval;
 
 window.settings = {
@@ -27,6 +28,8 @@ socket.on("session", (arg) => {
     window.start();
   }
   if (arg === "stop") {
+    if (!session) return;
+    session = false;
     document.querySelector(".started")?.remove();
     const el = document.createElement("div");
     el.classList.add("circle");
@@ -61,6 +64,8 @@ socket.on("settings", (arg) => {
 });
 
 window.start = function start() {
+  if (session) return;
+  session = true;
   oneCicle();
   interval = setInterval(oneCicle, Number(settings.speed));
 };
