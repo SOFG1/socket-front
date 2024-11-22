@@ -61,6 +61,7 @@ socket.on("settings", (arg) => {
 });
 
 window.start = function start() {
+  oneCicle();
   interval = setInterval(oneCicle, Number(settings.speed));
 };
 
