@@ -1,6 +1,8 @@
 const socket = io("https://socket-psli.onrender.com/");
 window.socket = socket;
 
+let interval;
+
 window.settings = {
   speed: "3000",
 };
@@ -32,11 +34,11 @@ socket.on("session", (arg) => {
     document.body.appendChild(el);
     startBtn?.removeAttribute("disabled");
     stopBtn?.setAttribute("disabled", true);
+    clearInterval(interval);
   }
 });
 
 //Settings
-
 input?.addEventListener("change", (e) => {
   const regex = /^\d+$/;
   const val = e.target.value;
@@ -59,6 +61,10 @@ socket.on("settings", (arg) => {
 });
 
 window.start = function start() {
+  interval = setInterval(oneCicle, Number(settings.speed));
+};
+
+function oneCicle() {
   document.querySelector(".circle")?.remove(); //Remove static
   const el = document.createElement("div");
   el.classList.add("circle");
@@ -69,7 +75,7 @@ window.start = function start() {
   el.classList.add("started");
   setTimeout(playAudio, duration * 0.25);
   setTimeout(playAudio, duration * 0.75);
-};
+}
 
 function playAudio() {
   if (!document.querySelector(".started")) return;
