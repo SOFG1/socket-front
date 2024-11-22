@@ -67,14 +67,12 @@ window.start = function start() {
   const duration = window.settings.speed;
   el.style.animationDuration = `${duration}ms`;
   el.classList.add("started");
-  setTimeout(() => {
-    if (!document.querySelector(".started")) return;
-    const audio = new Audio("1.wav");
-    audio.play();
-  }, duration * 0.25);
-  setTimeout(() => {
-    if (!document.querySelector(".started")) return;
-    const audio = new Audio("1.wav");
-    audio.play();
-  }, duration * 0.75);
+  setTimeout(playAudio, duration * 0.25);
+  setTimeout(playAudio, duration * 0.75);
 };
+
+function playAudio() {
+  if (!document.querySelector(".started")) return;
+  const audio = new Audio("1.wav");
+  audio.play();
+}
