@@ -23,7 +23,6 @@ socket.on("session", (arg) => {
     startBtn.setAttribute("disabled", true);
     stopBtn?.removeAttribute("disabled");
     window.start();
-    socket.emit("delay", new Date().getTime());
   }
   if (arg === "stop") {
     document.querySelector(".started")?.remove();
