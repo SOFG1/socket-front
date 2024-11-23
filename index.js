@@ -75,7 +75,9 @@ window.start = function start() {
   interval = setInterval(oneCicle, Number(settings.speed));
 };
 
-window.oneCircle = function oneCicle() {
+async function oneCicle() {
+  sendMessage();
+  await delay(370);
   document.querySelector(".circle")?.remove(); //Remove static
   const el = document.createElement("div");
   el.classList.add("circle");
@@ -84,13 +86,17 @@ window.oneCircle = function oneCicle() {
   const duration = window.settings.speed;
   el.style.animationDuration = `${duration}ms`;
   el.classList.add("started");
-  setTimeout(playAudio, duration * 0.25);
-  setTimeout(playAudio, duration * 0.75);
+  setTimeout(playAudio, duration / 2);
+  setTimeout(playAudio, duration);
   setTimeout(() => el.classList.remove("started"), duration); // Remove animation
-};
+}
+
+window.oneCicle = oneCicle;
 
 function playAudio() {
   if (!document.querySelector(".started")) return;
   const audio = new Audio("1.wav");
   audio.play();
 }
+
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));

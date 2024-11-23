@@ -22,15 +22,12 @@ body {
 
 @keyframes move {
   0% {
-    left: calc(50% - 15px);
-  }
-  25% {
-    left: calc(100% - 30px);
-  }
-  75% {
     left: 0;
   }
+  50% {
+    left: calc(100% - 30px);
+  }
   100% {
-    left: calc(50% - 15px);
+    left: 0;
   }
 }
