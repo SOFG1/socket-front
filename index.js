@@ -1,4 +1,9 @@
-const socket = io("https://socket-psli.onrender.com/");
+const HOST =
+  location.hostname === "127.0.0.1"
+    ? "192.168.100.84:3000"
+    : "https://socket-psli.onrender.com/";
+
+const socket = io(HOST);
 window.socket = socket;
 
 let session = false;
