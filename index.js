@@ -70,7 +70,7 @@ window.start = function start() {
   interval = setInterval(oneCicle, Number(settings.speed));
 };
 
-function oneCicle() {
+window.oneCircle = function oneCicle() {
   document.querySelector(".circle")?.remove(); //Remove static
   const el = document.createElement("div");
   el.classList.add("circle");
@@ -81,7 +81,8 @@ function oneCicle() {
   el.classList.add("started");
   setTimeout(playAudio, duration * 0.25);
   setTimeout(playAudio, duration * 0.75);
-}
+  setTimeout(() => el.classList.remove("started"), duration); // Remove animation
+};
 
 function playAudio() {
   if (!document.querySelector(".started")) return;
