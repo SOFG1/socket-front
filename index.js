@@ -28,19 +28,13 @@ stopBtn.addEventListener("click", (e) => {
 });
 
 socket.on("session", (arg) => {
-  if (arg === "start") {
-    startBtn.setAttribute("disabled", true);
-    stopBtn?.removeAttribute("disabled");
-    start();
-  }
-  if (arg === "stop") {
-    startBtn?.removeAttribute("disabled");
-    stopBtn?.setAttribute("disabled", true);
-    stop();
-  }
+  if (arg === "start") start();
+  if (arg === "stop") stop();
 });
 
 async function start() {
+  startBtn.setAttribute("disabled", true);
+  stopBtn?.removeAttribute("disabled");
   sendMessage("start");
   await delay(370);
   const duration = window.settings.speed;
@@ -51,6 +45,8 @@ async function start() {
 }
 
 function stop() {
+  startBtn?.removeAttribute("disabled");
+  stopBtn?.setAttribute("disabled", true);
   sendMessage("stop");
   circleElement.classList.remove("started");
   clearInterval(soundInterval);
