@@ -16,8 +16,8 @@ window.settings = {
 
 const startBtn = document.querySelector(".start");
 const stopBtn = document.querySelector(".stop");
-
 const input = document.querySelector(".number");
+const circleElement = document.querySelector(".circle");
 
 startBtn.addEventListener("click", (e) => {
   socket.emit("session", "start");
@@ -40,15 +40,9 @@ socket.on("session", (arg) => {
   }
 });
 
-socket.on("settings", (arg) => {
-  settings = arg;
-  // input.value = settings.speed;
-});
-
 async function start() {
   sendMessage("start");
   await delay(370);
-  const circleElement = document.querySelector(".circle");
   const duration = window.settings.speed;
   circleElement.classList.add("started");
   circleElement.style.animationDuration = `${duration}ms`;
@@ -58,13 +52,12 @@ async function start() {
 
 function stop() {
   sendMessage("stop");
-  const circleElement = document.querySelector(".circle");
   circleElement.classList.remove("started");
   clearInterval(soundInterval);
 }
 
 function playAudio() {
-  if (!document.querySelector(".started")) return;
+  if (circleElement.classList.contains("started")) return;
   const audio = new Audio("1.wav");
   audio.play();
 }
