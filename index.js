@@ -67,7 +67,6 @@ function restartAnimation() {
   circleElement.classList.add("started");
 }
 
-/////////////Speed
 //Settings
 input?.addEventListener("change", (e) => {
   const regex = /^\d+$/;
@@ -83,4 +82,10 @@ input?.addEventListener("change", (e) => {
   }
   settings.speed = e.target.value;
   socket.emit("settings", settings);
+});
+
+socket.on("settings", (arg) => {
+  window.settings = arg;
+  start();
+  input.value = arg.speed;
 });
