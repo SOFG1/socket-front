@@ -85,9 +85,9 @@ function handleIceCandidate(candidate) {
   }
 }
 
-function sendMessage() {
+function sendMessage(m) {
   if (sendChannel?.readyState === "open") {
-    sendChannel.send("t");
+    sendChannel.send(m);
   }
 }
 

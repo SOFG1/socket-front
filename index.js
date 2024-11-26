@@ -6,8 +6,9 @@ const HOST =
 const socket = io(HOST);
 window.socket = socket;
 
-let session = false;
-let interval;
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
+let soundInterval;
 
 window.settings = {
   speed: "3000",
@@ -30,22 +31,45 @@ socket.on("session", (arg) => {
   if (arg === "start") {
     startBtn.setAttribute("disabled", true);
     stopBtn?.removeAttribute("disabled");
-    window.start();
+    start();
   }
   if (arg === "stop") {
-    if (!session) return;
-    session = false;
-    document.querySelector(".started")?.remove();
-    const el = document.createElement("div");
-    el.classList.add("circle");
-    el.classList.add("static");
-    document.body.appendChild(el);
     startBtn?.removeAttribute("disabled");
     stopBtn?.setAttribute("disabled", true);
-    clearInterval(interval);
+    stop();
   }
 });
 
+socket.on("settings", (arg) => {
+  settings = arg;
+  // input.value = settings.speed;
+});
+
+async function start() {
+  sendMessage("start");
+  await delay(370);
+  const circleElement = document.querySelector(".circle");
+  const duration = window.settings.speed;
+  circleElement.classList.add("started");
+  circleElement.style.animationDuration = `${duration}ms`;
+  clearInterval(soundInterval);
+  soundInterval = setInterval(playAudio, duration / 2);
+}
+
+function stop() {
+  sendMessage("stop");
+  const circleElement = document.querySelector(".circle");
+  circleElement.classList.remove("started");
+  clearInterval(soundInterval);
+}
+
+function playAudio() {
+  if (!document.querySelector(".started")) return;
+  const audio = new Audio("1.wav");
+  audio.play();
+}
+
+/////////////Speed
 //Settings
 input?.addEventListener("change", (e) => {
   const regex = /^\d+$/;
@@ -62,41 +86,3 @@ input?.addEventListener("change", (e) => {
   settings.speed = e.target.value;
   socket.emit("settings", settings);
 });
-
-socket.on("settings", (arg) => {
-  settings = arg;
-  // input.value = settings.speed;
-});
-
-window.start = function start() {
-  if (session) return;
-  session = true;
-  oneCicle();
-  interval = setInterval(oneCicle, Number(settings.speed));
-};
-
-async function oneCicle() {
-  sendMessage();
-  await delay(370);
-  document.querySelector(".circle")?.remove(); //Remove static
-  const el = document.createElement("div");
-  el.classList.add("circle");
-  el.classList.add("started");
-  document.body.appendChild(el);
-  const duration = window.settings.speed;
-  el.style.animationDuration = `${duration}ms`;
-  el.classList.add("started");
-  setTimeout(playAudio, duration / 2);
-  setTimeout(playAudio, duration);
-  setTimeout(() => el.classList.remove("started"), duration); // Remove animation
-}
-
-window.oneCicle = oneCicle;
-
-function playAudio() {
-  if (!document.querySelector(".started")) return;
-  const audio = new Audio("1.wav");
-  audio.play();
-}
-
-const delay = (ms) => new Promise((r) => setTimeout(r, ms));
