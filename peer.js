@@ -1,15 +1,16 @@
-let peer //use this if single device
 let peers = {} //use these if host device
 
 window.receiveMessage = function(data) {
   const decoder = new TextDecoder();
   const string = decoder.decode(data);
-  console.log(string)
+  const obj = JSON.parse(string)
+  if(obj.action === "start") start()
+  if(obj.action === "stop") stop()
+  if(obj.action === "settings") setSettings(obj.data)
 }
 
 window.sendMessage =  function(data) {
   const list = Object.values(peers)
-  console.log(data)
   list.forEach(p => p.send(data))
 }
 
@@ -19,8 +20,6 @@ document.querySelector(".peer").addEventListener("click", () => sendMessage("dat
 socket.on("connection-started", (d) => {
   const isHost = d.indexOf(socket.id) === 0
   window.isHost = isHost
-  console.log(d)
-  console.log(socket.id)
   if(isHost) {
     createInitiatorPeers(d.slice(1))
   }
@@ -35,12 +34,11 @@ function createSinglePeer(socketId) {
     [socketId]: p
   }
   p.on("signal", (data) => {
-  console.log({id: socketId, data})
     socket.emit("signal", {id: socketId, data})
   })
   p.on("data", receiveMessage)
   p.on('connect', () => {
-    console.log('Peer connected!');
+    console.log('Single Peer connected!');
   });
 }
 

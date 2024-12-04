@@ -6,7 +6,7 @@ const HOST =
 const socket = io(HOST);
 window.socket = socket;
 
-const delayWithMobile = 0;
+const delayWithMobile = 150;
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 let soundInterval;
@@ -41,7 +41,7 @@ socket.on("start", () => {
 socket.on("stop", () => {
   if(window.isHost) {
     const d = JSON.stringify({
-      action: "start",
+      action: "stop",
     })
     sendMessage(d)
   }
@@ -51,13 +51,12 @@ socket.on("stop", () => {
 socket.on("settings", (arg) => {
   if(window.isHost) {
     const d = JSON.stringify({
-      action: "start",
+      action: "settings",
+      data: arg
     })
     sendMessage(d)
   }
-  window.settings = arg;
-  start();
-  input.value = arg.speed;
+  setSettings(arg)
 });
 
 
@@ -65,7 +64,6 @@ async function start() {
   startBtn.setAttribute("disabled", true);
   stopBtn?.removeAttribute("disabled");
   restartAnimation();
-  await delay(delayWithMobile);
   const duration = window.settings.speed;
   circleElement.style.animationDuration = `${duration}ms`;
   clearInterval(soundInterval);
@@ -91,6 +89,12 @@ function restartAnimation() {
   document.body.append(circleElement);
   circleElement.classList.add("circle");
   circleElement.classList.add("started");
+}
+
+window.setSettings = function(arg) {
+  window.settings = arg;
+  start();
+  input.value = arg.speed;
 }
 
 //Settings
