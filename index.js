@@ -6,7 +6,7 @@ const HOST =
 const socket = io(HOST);
 window.socket = socket;
 
-const delayWithMobile = 150;
+const delayWithMobile = 350;
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 let soundInterval;
@@ -64,6 +64,9 @@ async function start() {
   startBtn.setAttribute("disabled", true);
   stopBtn?.removeAttribute("disabled");
   restartAnimation();
+  if(window.isHost) {
+    await delay(delayWithMobile);
+  }
   const duration = window.settings.speed;
   circleElement.style.animationDuration = `${duration}ms`;
   clearInterval(soundInterval);
