@@ -1,12 +1,12 @@
 const HOST =
   location.hostname !== "sofg1.github.io"
-    ? "192.168.100.84:3000"
+    ? "192.168.100.101:3000"
     : "https://socket-psli.onrender.com";
 
 const socket = io(HOST);
 window.socket = socket;
 
-const delayWithMobile = 250;
+const delayWithMobile = 0;
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 let soundInterval;
@@ -21,23 +21,50 @@ const input = document.querySelector(".number");
 let circleElement = document.querySelector(".circle");
 
 startBtn.addEventListener("click", (e) => {
-  socket.emit("session", "start");
+  socket.emit("start", "start");
 });
 
 stopBtn.addEventListener("click", (e) => {
-  socket.emit("session", "stop");
+  socket.emit("stop", "stop");
 });
 
-socket.on("session", (arg) => {
-  if (arg === "start") start();
-  if (arg === "stop") stop();
+socket.on("start", () => {
+  if(window.isHost) {
+    const d = JSON.stringify({
+      action: "start",
+    })
+    sendMessage(d)
+  }
+  start()
 });
+
+socket.on("stop", () => {
+  if(window.isHost) {
+    const d = JSON.stringify({
+      action: "start",
+    })
+    sendMessage(d)
+  }
+  stop()
+});
+
+socket.on("settings", (arg) => {
+  if(window.isHost) {
+    const d = JSON.stringify({
+      action: "start",
+    })
+    sendMessage(d)
+  }
+  window.settings = arg;
+  start();
+  input.value = arg.speed;
+});
+
 
 async function start() {
   startBtn.setAttribute("disabled", true);
   stopBtn?.removeAttribute("disabled");
   restartAnimation();
-  sendMessage("start");
   await delay(delayWithMobile);
   const duration = window.settings.speed;
   circleElement.style.animationDuration = `${duration}ms`;
@@ -48,7 +75,6 @@ async function start() {
 function stop() {
   startBtn?.removeAttribute("disabled");
   stopBtn?.setAttribute("disabled", true);
-  sendMessage("stop");
   circleElement.classList.remove("started");
   clearInterval(soundInterval);
 }
@@ -82,10 +108,4 @@ input?.addEventListener("change", (e) => {
   }
   settings.speed = e.target.value;
   socket.emit("settings", settings);
-});
-
-socket.on("settings", (arg) => {
-  window.settings = arg;
-  start();
-  input.value = arg.speed;
 });
